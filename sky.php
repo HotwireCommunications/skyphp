@@ -12,7 +12,7 @@ if (!is_array($codebase_path_arr) || !$codebase_path_arr) {
 }
 
 # backward compatibility paths
-$sky_install_path = ($sky_install_path) ?: $skyphp_codebase_path;
+$sky_install_path = (isset($sky_install_path)) ?: $skyphp_codebase_path;
 if ($skyphp_storage_path) {
     if (substr($skyphp_storage_path,-1) !='/') $skyphp_storage_path .= '/';
     $sky_media_local_path = $skyphp_storage_path . 'media';
@@ -30,13 +30,17 @@ $add_include_path = implode(PATH_SEPARATOR, $codebase_path_arr);
 set_include_path($add_include_path);
 
 # if down for maintenance
-if ($down_for_maintenance) {
+if (isset($down_for_maintenance)&&$down_for_maintenance) {
     include 'pages/503.php';
     die;
 }
 
 # TODO: clean out functions.inc.php
 include_once 'lib/core/functions.inc.php';
+
+foreach($_REQUEST as $k => $v){ $_REQUEST[$k] = sql_escape_string($v); hwc_debug::add_request('REQUEST', $k, $_REQUEST[$k], true); }
+foreach($_GET as $k => $v){     $_GET[$k] = sql_escape_string($v);     hwc_debug::add_request('GET', $k, $_GET[$k], true); }
+foreach($_POST as $k => $v){    $_POST[$k] = sql_escape_string($v);    hwc_debug::add_request('POST', $k, $_POST[$k], true); }
 
 # parse the url for the folders
 $uri =  call_user_func(function($t) {

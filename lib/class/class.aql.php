@@ -487,7 +487,7 @@ class aql
             if ($v === null || $v === '') {
                 unset($fields[$k]); continue;
             }
-            $fields[$k] = trim($v);
+            $fields[$k] = sql_escape_string(trim($v));
         }
 
         if (!$fields) {
@@ -664,7 +664,7 @@ class aql
             return false;
         }
 
-        foreach ($fields as $k => $v) { $fields[$k] = trim($v); } //($v=='-0001-11-30'?NULL:trim($v)); }
+        foreach ($fields as $k => $v) { $fields[$k] = sql_escape_string(trim($v)); }
 
         $dbw = self::getMasterDB();
         $result = $dbw->AutoExecute($table, $fields, 'UPDATE', 'id = ' . $id);
