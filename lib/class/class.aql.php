@@ -221,6 +221,10 @@ class aql
         global $is_dev;
 
         $conn = $conn ?: self::getDB();
+        if(defined('NEEDS-UTF8-DB')) {
+            $conn->Execute("set names 'utf8'");
+        }
+        
         $silent = aql::in_transaction();
 
         if (!is_array($clause) && $clause === true) {
