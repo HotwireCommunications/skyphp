@@ -19,11 +19,11 @@ class aql
 
     /**
      * Generates a form for the given model
-     * @param   string  $model_name
-     * @param   string  $ide
+     * @param string $model_name
+     * @param string $ide
      * @return  \Sky\Page
-     * @global  $p      \Sky\Page
      * @throws  Exception           if no global $p
+     * @global  $p      \Sky\Page
      * @deprecated                  Use \Sky\Page::form(\Model) instead
      */
     public function form($model_name, $ide = null)
@@ -44,7 +44,7 @@ class aql
     /**
      * Checks the model's aql for default clauses
      * and returns a clause array, only keys: [where, order by]
-     * @param   string  $model_name
+     * @param string $model_name
      * @return  array
      */
     public static function get_clauses_from_model($model_name)
@@ -65,7 +65,7 @@ class aql
 
     /**
      * Makes a minimal AQL statement from the given AQL Array
-     * @param   array   $arr
+     * @param array $arr
      * @return  string
      */
     public static function minAQLFromArr(array $arr)
@@ -89,7 +89,7 @@ class aql
     /**
      * Makes a minimal AQL statement form the model's AQL, keeping only the joins,
      * and the primary_table's ID
-     * @param   string  $model_name
+     * @param string $model_name
      * @return  string
      */
     public static function get_min_aql_from_model($model_name)
@@ -99,7 +99,7 @@ class aql
 
     /**
      * Finds the AQL in the codebases
-     * @param   string  $model_name
+     * @param string $model_name
      * @return  string
      * @global  $codebase_path_arr
      * @global  $sky_aql_model_path
@@ -107,7 +107,7 @@ class aql
     public function get_aql($model_name)
     {
         global $codebase_path_arr,
-            $sky_aql_model_path;
+               $sky_aql_model_path;
 
 
         foreach ($codebase_path_arr as $codebase_path) {
@@ -145,12 +145,12 @@ class aql
      * Performs a select on the database and returns records,
      * it can possibly return objects as well using third param
      * This is like aql::select, except for it returns only ONE record
-     * @param   mixed   $aql        model name | aql | aql array
-     * @param   string  $id         id | ide
-     * @param   mixed   $obj        string | bool
-     * @param   string  $statment   if object, you can pass an aql statement
-     * @param   Boolean $force     forces master db
-     * @param   mixed   $conn       DB connection to override default
+     * @param mixed $aql model name | aql | aql array
+     * @param string $id id | ide
+     * @param mixed $obj string | bool
+     * @param string $statment if object, you can pass an aql statement
+     * @param Boolean $force forces master db
+     * @param mixed $conn DB connection to override default
      * @return  array
      */
     public static function profile($aql, $id, $obj = false, $statement = null, $force = false, $conn = null)
@@ -160,7 +160,7 @@ class aql
 
             $aql = $aql;  // this is the aql_array
 
-        } else if (!self::is_aql($aql))  {
+        } else if (!self::is_aql($aql)) {
 
             $statement = ($statement) ?: self::get_aql($aql);
             $model = $aql;
@@ -194,7 +194,7 @@ class aql
         $clause = array(
             $model => array(
                 'where' => array(
-                    $model.'.id = '.$id
+                    $model . '.id = ' . $id
                 )
             )
         );
@@ -205,26 +205,22 @@ class aql
 
     /**
      * Executes a select query on the DB
-     * @param   mixed   $aql        aql | model name | aql array
-     * @param   array   $clause     clause array | true (for $obj)
-     * @param   mixed   $obj        Boolean or object name
-     * @param   string  $statement  If passing in an aql array, use this to also pass in
+     * @param mixed $aql aql | model name | aql array
+     * @param array $clause clause array | true (for $obj)
+     * @param mixed $obj Boolean or object name
+     * @param string $statement If passing in an aql array, use this to also pass in
      *                              the aql statement
-     * @param   Boolean $force      Force master DB read
-     * @param   mixed   $conn       Specific DB connection
+     * @param Boolean $force Force master DB read
+     * @param mixed $conn Specific DB connection
      * @return  array
-     * @global  $is_dev
      * @throws  \Sky\AQL\Exception  if model not found
+     * @global  $is_dev
      */
     public function select($aql, $clause = array(), $obj = false, $statement = null, $force = false, $conn = null)
     {
         global $is_dev;
 
         $conn = $conn ?: self::getDB();
-        if(defined('NEEDS-UTF8-DB')) {
-            $conn->Execute("set names 'utf8'");
-        }
-        
         $silent = aql::in_transaction();
 
         if (!is_array($clause) && $clause === true) {
@@ -249,7 +245,7 @@ class aql
                 $statement = self::get_aql($m);
                 if (!$statement) {
                     $e = new \Sky\AQL\Exception(
-                        ' AQL Error: Model '. $m .' is not defined. ' . PHP_EOL
+                        ' AQL Error: Model ' . $m . ' is not defined. ' . PHP_EOL
                         . "path/to/models/$m/$m.aql is empty or not found."
                     );
 
@@ -299,8 +295,8 @@ class aql
     /**
      * Returns result of a count(*) query on the given AQL
      * using sql_count select type
-     * @param   mixed   $aql    string | aql array
-     * @param   array   $clause
+     * @param mixed $aql string | aql array
+     * @param array $clause
      * @return  int
      */
     public static function count($aql, $clause = array())
@@ -321,8 +317,8 @@ class aql
      *  [
      *      [ id, {$primary_table}_id ]
      *  ]
-     * @param   mixed   $aql    string | aql array
-     * @param   array   $clause
+     * @param mixed $aql string | aql array
+     * @param array $clause
      * @return  array
      */
     public static function listing($aql, $clause = array())
@@ -338,12 +334,12 @@ class aql
     /**
      * Performs db select
      * This is a shortcut function to use the master db because of arguments list length
+     * @param mixed $aql
+     * @param mxied $clause
+     * @param mixed $obj
+     * @param mixed $statement
+     * @param Boolean $force_db
      * @see     self::select() on how these arguments get mapped
-     * @param   mixed   $aql
-     * @param   mxied   $clause
-     * @param   mixed   $obj
-     * @param   mixed   $statement
-     * @param   Boolean $force_db
      */
     public static function selectDBW($aql, $clause = null, $obj = false, $statement = null, $force_db = false)
     {
@@ -354,8 +350,8 @@ class aql
     /**
      * Generates the sql_array with different query types based on the given aql
      * and clause array
-     * @param   mixed   $aql    string | array
-     * @param   array   $clause_array
+     * @param mixed $aql string | array
+     * @param array $clause_array
      * @return  array
      */
     public static function sql($aql, $clause = array())
@@ -380,10 +376,10 @@ class aql
      *      // can decrement
      *      aql::incremnet('table.field', -2, $id);
      *
-     * @param   string  $table_field
-     * @param   string  $value
-     * @param   string  $id     id | ide
-     * @param   Boolean $silent
+     * @param string $table_field
+     * @param string $value
+     * @param string $id id | ide
+     * @param Boolean $silent
      * @return  Boolean
      * @throws  \Sky\AQL\Exception  if invalid args
      * @throws  \Sky\AQL\TransactionException if udpate failed
@@ -460,9 +456,9 @@ class aql
     /**
      * Inserts a record into the database
      * If in a transaction or silent, exceptions will be added to self::$errors stack
-     * @param   string      $table
-     * @param   array       $fields
-     * @param   Boolean     $silent
+     * @param string $table
+     * @param array $fields
+     * @param Boolean $silent
      * @return  array                           [ recordset ]
      * @throws  \Sky\AQL\Exception              if fields are invalid
      * @throws  \Sky\AQL\TransactionException  if insert failure
@@ -489,7 +485,8 @@ class aql
         unset($fields['id']);
         foreach ($fields as $k => $v) {
             if ($v === null || $v === '') {
-                unset($fields[$k]); continue;
+                unset($fields[$k]);
+                continue;
             }
             $fields[$k] = trim($v);
         }
@@ -535,7 +532,7 @@ class aql
                 $id = $s->Fields('id');
             } else {
 
-                $e = new \Sky\AQL\Exception($table .' getID() error after insert.');
+                $e = new \Sky\AQL\Exception($table . ' getID() error after insert.');
 
                 if ($silent) {
                     aql::$errors[] = $e;
@@ -572,18 +569,18 @@ class aql
         return strpos(self::get_db_platform(), 'postgres') !== false;
     }
 
-	/**
+    /**
      * Duplicates a record in the database
      * If in a transaction or silent, errors/exceptions will be added to self::$errors
-     * @param   string  $table
-     * @param   string  $id     id | ide
-	 * @param	bool    $deactivate	
-     * @param   Boolean $silent
+     * @param string $table
+     * @param string $id id | ide
+     * @param bool $deactivate
+     * @param Boolean $silent
      * @return  Duplicate
      * @throws  \Sky\AQL\Exception              if invalid ID
      * @throws  \Sky\AQL\TransactionException  on update failure
      */
-    public static function duplicate($table, $identifier, $deactivate=false, $silent = false)
+    public static function duplicate($table, $identifier, $deactivate = false, $silent = false)
     {
         if (!self::hasMasterDB()) {
             return false;
@@ -604,19 +601,18 @@ class aql
         }
 
         $dbw = self::getMasterDB();
+        $data = self::profile("$table { * }", $id);
+        unset($data['id']);
+        $duplicate = self::insert($table, $data);
 
-		$data = self::profile("$table { * }",$id);
-		unset($data['id']);
-		$duplicate = self::insert($table,$data);
-		
-		if ($duplicate[0][$table.'_ide']) {
+        if ($duplicate[0][$table . '_ide']) {
 
-			if ($deactivate === true) {
-				self::update($table,array('active'=>0),$id);
-			}
-			
-			return $duplicate[0];
-		}
+            if ($deactivate === true) {
+                self::update($table, array('active' => 0), $id);
+            }
+
+            return $duplicate[0];
+        }
 
         $e = new \Sky\AQL\TransactionException(
             $table,
@@ -636,10 +632,10 @@ class aql
     /**
      * Updates a record in the database
      * If in a transaction or silent, errors/exceptions will be added to self::$errors
-     * @param   string  $table
-     * @param   array   $fields (associative)
-     * @param   string  $id     id | ide
-     * @param   Boolean $silent
+     * @param string $table
+     * @param array $fields (associative)
+     * @param string $id id | ide
+     * @param Boolean $silent
      * @return  Boolean
      * @throws  \Sky\AQL\Exception              if invalid ID
      * @throws  \Sky\AQL\TransactionException  on update failure
@@ -668,7 +664,9 @@ class aql
             return false;
         }
 
-        foreach ($fields as $k => $v) { $fields[$k] = trim($v); } //($v=='-0001-11-30'?NULL:trim($v)); }
+        foreach ($fields as $k => $v) {
+            $fields[$k] = trim($v);
+        } //($v=='-0001-11-30'?NULL:trim($v)); }
 
         $dbw = self::getMasterDB();
         $result = $dbw->AutoExecute($table, $fields, 'UPDATE', 'id = ' . $id);
@@ -692,9 +690,9 @@ class aql
     }
 
     /**
-     * @param   string  $param1
-     * @param   string  $param2
-     * @param   mixed   $options
+     * @param string $param1
+     * @param string $param2
+     * @param mixed $options
      * @return  mixed
      */
     public static function value($param1, $param2, $options = array())
@@ -720,17 +718,17 @@ class aql
             $aql = $param1;
             $primary_table = aql::get_primary_table($aql);
         } else {
-            list($primary_table, $field) = explode('.',$param1);
+            list($primary_table, $field) = explode('.', $param1);
             $aql = "$primary_table { $field }";
         }
 
         // get where
         $multiple = false;
-        $where = call_user_func(function() use($primary_table, $param2, &$multiple) {
+        $where = call_user_func(function () use ($primary_table, $param2, &$multiple) {
 
             $spr = '%s.%s = \'%s\'';
 
-            $decrypt = function($r) use($primary_table)  {
+            $decrypt = function ($r) use ($primary_table) {
                 return (is_numeric($r)) ? $r : decrypt($r, $primary_table);
             };
 
@@ -794,22 +792,24 @@ class aql
     ######################################################################################
 
     /**
-     * @global  $db
      * @return  ADodb connection | null
+     * @global  $db
      */
     public static function getDB()
     {
         global $db;
+        aql::setUtf8($db);
         return $db;
     }
 
     /**
-     * @global  $dbw
      * @return ADODB Connection | null
+     * @global  $dbw
      */
     public static function getMasterDB()
     {
         global $dbw;
+        aql::setUtf8($dbw);
         return $dbw;
     }
 
@@ -818,7 +818,7 @@ class aql
      */
     public static function hasMasterDB()
     {
-        return (bool) self::getMasterDB();
+        return (bool)self::getMasterDB();
     }
 
     /**
@@ -890,8 +890,8 @@ class aql
     /**
      * Given the aql array, append table names to strings in the clause aray if they are
      * missing
-     * @param   array   $aql_array
-     * @param   array   $clause_array
+     * @param array $aql_array
+     * @param array $clause_array
      */
     public static function check_clause_array($aql_array, $clause_array)
     {
@@ -945,7 +945,7 @@ class aql
     /**
      * Loops through the associative array looking for keys that end with _id
      * If they look like they are tablename_id, adds tablename_ide
-     * @param   array   $r
+     * @param array $r
      * @return  array
      */
     public function generate_ides($r)
@@ -967,7 +967,7 @@ class aql
     }
 
     /**
-     * @param   string  $field_name
+     * @param string $field_name
      * @return  string
      */
     public function get_decrypt_key($field_name)
@@ -994,7 +994,7 @@ class aql
     }
 
     /**
-     * @param   string  $aql
+     * @param string $aql
      * @return  string
      */
     public function get_primary_table($aql)
@@ -1006,7 +1006,7 @@ class aql
 
     /**
      * Includes the class looking for it in $sky_aql_model_path
-     * @param   string  $model_name
+     * @param string $model_name
      * @global  $sky_aql_model_path
      */
     public static function include_class_by_name($model_name)
@@ -1015,7 +1015,7 @@ class aql
             return;
         }
         global $sky_aql_model_path;
-        $path = $sky_aql_model_path.'/'.$model_name.'/class.'.$model_name.'.php';
+        $path = $sky_aql_model_path . '/' . $model_name . '/class.' . $model_name . '.php';
         if (file_exists_incpath($path)) {
             include $path;
         }
@@ -1023,7 +1023,7 @@ class aql
 
     /**
      * Checks if a string is AQL
-     * @param   string  $aql
+     * @param string $aql
      * @return  Boolean
      */
     public static function is_aql($aql)
@@ -1036,21 +1036,21 @@ class aql
      * It will execute recursively based on the given array
      * depending on if there are "subs" or objects and their respective sql_arrays and aql
      *
-     * @see self::sql()
-     * @param   array   $arr    generated sql array
+     * @param array $arr generated sql array
      *                  - sql
      *                  - sql_list
      *                  - sql_count
      *                  - subs
      *                  - objects
-     * @param   array   $settings
+     * @param array $settings
      *                  - object (bool)
      *                  - aql_statement (string)
      *                  - select_type (string) default is 'sql'
-     * @param   db      $db_conn
+     * @param db $db_conn
      * @return  array
      * @throws  \Sky\AQL\ConnectionException    if no db
      * @throws  \Sky\AQL\SelectException        if db select fails
+     * @see self::sql()
      */
     private static function sql_result($arr, $settings, $db_conn = null)
     {
@@ -1077,8 +1077,8 @@ class aql
         $rs = array();
         $microtime_start = microtime(true);
         $r = $db_conn->Execute($arr[$select_type]);
-        if(class_exists('hwc_debug')){
-            hwc_debug::add_aql($arr[$select_type], number_format(microtime(true) - $microtime_start,3));
+        if (class_exists('hwc_debug')) {
+            hwc_debug::add_aql($arr[$select_type], number_format(microtime(true) - $microtime_start, 3));
         }
 
         if ($r === false) {
@@ -1103,11 +1103,11 @@ class aql
             $tmp = self::generate_ides($r->GetRowAssoc(false));
 
             $placeholder = null;
-            $get_placeholder = function($m) use($tmp, &$placeholder) {
+            $get_placeholder = function ($m) use ($tmp, &$placeholder) {
                 return $placeholder = $tmp[$m[1]];
             };
 
-            $replace_placeholder = function($clause) use($get_placeholder) {
+            $replace_placeholder = function ($clause) use ($get_placeholder) {
                 return preg_replace_callback(
                     '/\{\$([\w.]+)\}/',
                     $get_placeholder,
@@ -1153,19 +1153,24 @@ class aql
                         );
 
                         if ($query) {
-                    // new getRecords method
-                            $ca = $s['constructor argument']; $p = new $m();
-                            $arr = array('ids'=>array_map(function($a) use ($ca) { return $a[$ca]; },$query));
-                            foreach($p->getRecords($arr) as $row){ $tmp[$k][]['_data'] = $row; }
-                  // old query loop method
-/*                            foreach ($query as $row) {
-                                $arg = $row[$s['constructor argument']];
-                                $o = Model::get($m, $arg, $sub_do_set);
-                                $tmp[$k][] = ($object) ? $o : $o->dataToArray();
-                            }*/
+                            // new getRecords method
+                            $ca = $s['constructor argument'];
+                            $p = new $m();
+                            $arr = array('ids' => array_map(function ($a) use ($ca) {
+                                return $a[$ca];
+                            }, $query));
+                            foreach ($p->getRecords($arr) as $row) {
+                                $tmp[$k][]['_data'] = $row;
+                            }
+                            // old query loop method
+                            /*                            foreach ($query as $row) {
+                                                            $arg = $row[$s['constructor argument']];
+                                                            $o = Model::get($m, $arg, $sub_do_set);
+                                                            $tmp[$k][] = ($object) ? $o : $o->dataToArray();
+                                                        }*/
                         }
                     } else if (!$s['plural']) {
-                        $arg = (int) $tmp[$s['constructor argument']];
+                        $arg = (int)$tmp[$s['constructor argument']];
                         if ($arg) {
                             $o = Model::get($m, $arg, $sub_do_set);
                             $tmp[$k] = ($object) ? $o : $o->dataToArray();
@@ -1196,12 +1201,13 @@ class aql
 
     /**
      * Recursively generates sql statements from the aqlarray
-     * @param   array   $arr
-     * @param   array   $clause_array
+     * @param array $arr
+     * @param array $clause_array
      * @return  array
      * @throws  \Sky\AQL\Exception   If there are aql errors
      */
-    public function make_sql_array($arr, $clause_array = array()) {
+    public function make_sql_array($arr, $clause_array = array())
+    {
 
         if (count($arr) == 0) {
             throw new \Sky\AQL\Exception('AQL Error: You have an error in your syntax.');
@@ -1211,12 +1217,12 @@ class aql
         $has_aggregate = $distinct = false;
         $joins = $from = $limit = $offset = '';
         $fields = $left_joined
-                = $where
-                = $objects
-                = $order_by
-                = $group_by
-                = $fk
-                = array();
+            = $where
+            = $objects
+            = $order_by
+            = $group_by
+            = $fk
+            = array();
 
 
         foreach ($arr as $t) {
@@ -1224,7 +1230,7 @@ class aql
             $table_name = $t['table'];
 
             if ($t['as'] && $table_name != $t['as']) {
-                $table_name .= ' as '. $t['as'];
+                $table_name .= ' as ' . $t['as'];
             }
 
             if (!$t['on']) {
@@ -1250,11 +1256,11 @@ class aql
 
                 $left_joined[] = $t['table'];
                 $joins .= sprintf(
-                    'LEFT JOIN %s on %s and %s.active = 1 ',
-                    $table_name,
-                    $t['on'],
-                    $t['as']
-                ) . PHP_EOL;
+                        'LEFT JOIN %s on %s and %s.active = 1 ',
+                        $table_name,
+                        $t['on'],
+                        $t['as']
+                    ) . PHP_EOL;
 
             }
 
@@ -1342,7 +1348,7 @@ class aql
         if (!$has_aggregate && !$no_ids) {
 
             foreach ($arr as $t) {
-                $fields[$t['table'].'_id'] = "{$t['as']}.id";
+                $fields[$t['table'] . '_id'] = "{$t['as']}.id";
             }
 
         } else if ($has_aggregate) {
@@ -1357,7 +1363,7 @@ class aql
 
                 if ($t['order by']) {
                     foreach ($t['order by'] as $k => $v) {
-                        $tmp = str_replace(array(' asc', ' desc', ' ASC', ' DESC'),'', $v);
+                        $tmp = str_replace(array(' asc', ' desc', ' ASC', ' DESC'), '', $v);
                         if (trim($tmp)) {
                             if (!preg_match('/(case|when)/', $tmp)) {
                                 $group_by[] = $tmp;
@@ -1439,4 +1445,10 @@ class aql
         );
     }
 
+    public static function setUtf8($conn)
+    {
+        if(defined('NEEDS-UTF8-DB')) {
+            $conn->Execute("set names 'utf8'");
+        }
+    }
 }
